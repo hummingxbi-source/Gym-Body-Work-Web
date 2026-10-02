@@ -1,0 +1,66 @@
+﻿---
+// Nav.astro — Sticky top navigation bar
+// Minimal: logo left, future nav links right.
+---
+<header class="nav">
+  <div class="container nav__inner">
+    <a href="/" class="nav__logo" aria-label="Body Work Gym & Fitness — Home">
+      <span class="nav__logo-main headline">Body Work</span>
+      <span class="nav__logo-sub">GYM &amp; FITNESS</span>
+    </a>
+
+    <!-- Future: nav links go here -->
+    <nav aria-label="Primary navigation">
+      <ul class="nav__links">
+        <!-- placeholder for future links -->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg);
+    border-bottom: var(--border);
+    /* No box-shadow per design rules */
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    padding-block: var(--sp-3);
+  }
+
+  .nav__logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    line-height: 1;
+  }
+
+  .nav__logo-main {
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .nav__logo-sub {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .nav__links {
+    display: flex;
+    gap: var(--sp-6);
+    align-items: center;
+  }
+</style>
