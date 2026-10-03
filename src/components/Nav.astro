@@ -1,18 +1,18 @@
-﻿---
+---
 // Nav.astro — Sticky top navigation bar
 // Minimal: logo left, future nav links right.
 ---
 <header class="nav">
   <div class="container nav__inner">
-    <a href="/" class="nav__logo" aria-label="Body Work Gym & Fitness — Home">
+    <a href="/" class="nav__logo" aria-label="Body Work Gym &amp; Fitness — Inicio">
       <span class="nav__logo-main headline">Body Work</span>
       <span class="nav__logo-sub">GYM &amp; FITNESS</span>
     </a>
-
-    <!-- Future: nav links go here -->
-    <nav aria-label="Primary navigation">
+    <nav aria-label="Navegación principal">
       <ul class="nav__links">
-        <!-- placeholder for future links -->
+        <li>
+          <span class="nav__location">| CUAUTITLÁN IZCALLI</span>
+        </li>
       </ul>
     </nav>
   </div>
@@ -22,10 +22,9 @@
   .nav {
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
     background-color: var(--bg);
     border-bottom: var(--border);
-    /* No box-shadow per design rules */
   }
 
   .nav__inner {
@@ -41,6 +40,7 @@
     flex-direction: column;
     gap: 1px;
     line-height: 1;
+    text-decoration: none;
   }
 
   .nav__logo-main {
@@ -62,5 +62,16 @@
     display: flex;
     gap: var(--sp-6);
     align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__location {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    letter-spacing: 0.15em;
   }
 </style>

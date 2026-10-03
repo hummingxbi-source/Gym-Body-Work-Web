@@ -1,96 +1,447 @@
-﻿---
-// Hero.astro — Full-viewport hero section.
-// Layout: texto izq (60%) + contenedor 3D derecha (40%).
-// Reglas: sin sombras, sin gradientes, sin emojis.
 ---
-<section class="hero" aria-labelledby="hero-headline">
+---
+<section class="hero" id="hero-section" aria-labelledby="hero-headline">
+  <div class="hero__stage" id="hero-stage">
+    
+    <!-- Background Image that fades out on scroll -->
+    <div class="hero__bg" id="hero-bg"></div>
 
-  <div class="container hero__inner">
-
-    <!-- Columna izquierda: texto -->
-    <div class="hero__text">
-
-      <p class="hero__overline">Cuautitlán Izcalli</p>
-
-      <h1 id="hero-headline" class="hero__headline headline">
-        Diferente<br />
-        <span class="accent">Entrena</span><br />
-        Diferente
-      </h1>
-
-      <p class="hero__body">
-        El gimnasio que te exige tanto como tú mismo.<br />
-        Sin excusas. Sin límites.
-      </p>
-
-      <div class="hero__actions">
-        <a href="#contacto" class="btn btn--primary">Empieza hoy</a>
-        <a href="#nosotros" class="btn btn--ghost">Conoce el gym</a>
+    <canvas id="hero-canvas" class="hero__canvas" aria-hidden="true" role="presentation"></canvas>
+    
+    <div class="hero__beats" id="hero-zone-text">
+      
+      <!-- Beat 1: Oryzo-style intro -->
+      <div class="hero__beat hero__beat--intro is-active" id="hero-beat-1" data-beat="1">
+        <h1 class="hero__intro-title">BODY<br/>WORK<span class="accent" style="margin-left: 0.05em;">.</span></h1>
+        
+        <div class="hero__intro-cards">
+          <div class="hero__glass-card hero__glass-card--left">
+            <p class="hero__glass-title">DISEÑADO PARA EXIGIRTE AL MÁXIMO.</p>
+            <p class="hero__glass-text">El gimnasio más equipado de Cuautitlán Izcalli.</p>
+          </div>
+          
+          <div class="hero__glass-card hero__glass-card--right">
+            <p class="hero__glass-desc">Body Work no es solo un gimnasio. Es el resultado de tu constancia, disciplina y ganas de superarte todos los días.</p>
+          </div>
+        </div>
+        
+        <div class="hero__scroll-indicator" id="hero-scroll-hint" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+          <span>SCROLL PARA CONTINUAR</span>
+        </div>
       </div>
 
+      <!-- Beat 2: Original Beat 1 -->
+      <div class="hero__beat hero__beat--content" id="hero-beat-2" data-beat="2" aria-hidden="true">
+        <div class="hero__beat-left">
+          <p class="hero__overline">Cuautitlán Izcalli</p>
+          <h2 id="hero-headline" class="hero__headline headline">
+            Diferente<br />
+            <span class="accent">Entrena</span><br />
+            Diferente
+          </h2>
+          <div class="hero__actions">
+            <a href="#contacto" class="btn btn--primary" id="hero-cta-start">Empieza hoy</a>
+            <a href="#nosotros" class="btn btn--ghost" id="hero-cta-gym">Conoce el gym</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Beat 3: Original Beat 2 -->
+      <div class="hero__beat hero__beat--content" id="hero-beat-3" data-beat="3" aria-hidden="true">
+        <div class="hero__beat-left">
+          <h2 class="hero__headline headline">
+            No es solo<br />
+            <span class="accent">un gym.</span>
+          </h2>
+          <p class="hero__beat-body">
+            Máquinas, jaulas de bateo, sauna y regaderas.<br/>Todo en un solo lugar.
+          </p>
+        </div>
+      </div>
+
+      <!-- Beat 4: Original Beat 3 -->
+      <div class="hero__beat hero__beat--content" id="hero-beat-4" data-beat="4" aria-hidden="true">
+        <div class="hero__beat-left">
+          <h2 class="hero__headline headline">
+            Hierro.<br />
+            <span class="accent">Sudor.</span><br />
+            Constancia.
+          </h2>
+          <p class="hero__beat-body">
+            Abierto desde las 4:30 a.m.
+          </p>
+        </div>
+      </div>
+
+      <!-- Beat 5: Original Beat 4 -->
+      <div class="hero__beat hero__beat--content" id="hero-beat-5" data-beat="5" aria-hidden="true">
+        <div class="hero__beat-left">
+          <h2 class="hero__headline headline">
+            Empieza<br /><span class="accent">hoy.</span>
+          </h2>
+          <p class="hero__beat-body hero__beat-body--schedule">
+            Lun&ndash;Vie: 4:30&nbsp;a.m.&ndash;10&nbsp;p.m.<br />
+            Sab: 6&nbsp;a.m.&ndash;8&nbsp;p.m. &middot; Dom: 8&nbsp;a.m.&ndash;3&nbsp;p.m.
+          </p>
+          <div class="hero__actions">
+            <a href="#contacto" class="btn btn--primary" id="hero-cta-end">Contáctanos</a>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Columna derecha: reservada para modelo 3D -->
-    <div class="hero__3d" id="hero-3d" aria-hidden="true"></div>
+    <div class="hero__chrome" id="hero-chrome" aria-hidden="true" style="opacity: 0; transition: opacity 400ms;">
+      <div class="hero__counter" id="hero-counter">
+        <span class="hero__counter-current" id="hero-counter-current">01</span>
+        <span class="hero__counter-sep">&nbsp;/&nbsp;</span>
+        <span class="hero__counter-total">04</span>
+      </div>
+    </div>
+    
+    <div class="hero__rail" id="hero-rail" aria-hidden="true" style="opacity: 0; transition: opacity 400ms;">
+      <div class="hero__rail-line"></div>
+      <button class="hero__rail-mark" data-rail="1" aria-label="Beat 1" tabindex="-1"></button>
+      <button class="hero__rail-mark" data-rail="2" aria-label="Beat 2" tabindex="-1"></button>
+      <button class="hero__rail-mark" data-rail="3" aria-label="Beat 3" tabindex="-1"></button>
+      <button class="hero__rail-mark" data-rail="4" aria-label="Beat 4" tabindex="-1"></button>
+    </div>
 
   </div>
-
-  <!-- Indicador de scroll -->
-  <p class="hero__scroll" aria-hidden="true">Desliza</p>
-
-  <!-- Bottom divider -->
-  <hr class="divider" />
-
 </section>
 
+<script>
+  const section   = document.getElementById('hero-section');
+  const canvas    = document.getElementById('hero-canvas');
+  const bg        = document.getElementById('hero-bg');
+  const beats     = document.querySelectorAll('.hero__beat');
+  const hint      = document.getElementById('hero-scroll-hint');
+  const chrome    = document.getElementById('hero-chrome');
+  const rail      = document.getElementById('hero-rail');
+  const counterEl = document.getElementById('hero-counter-current');
+  const railMarks = document.querySelectorAll('.hero__rail-mark');
+
+  if (section && canvas) {
+    let activeBeat = 1;
+    let hinted     = false;
+
+    const scrollState = {
+      _p: 0,
+      _beat: 1,
+      getProgress() { return this._p; },
+      getBeat()     { return this._beat; },
+    };
+
+    function getProgress() {
+      const rect  = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
+      if (total <= 0) return 0;
+      return Math.max(0, Math.min(1, -rect.top / total));
+    }
+
+    function beatFromP(p) {
+      if (p < 0.05) return 1;
+      if (p < 0.30) return 2;
+      if (p < 0.55) return 3;
+      if (p < 0.80) return 4;
+      return 5;
+    }
+
+    function updateUI(beat, p) {
+      // Background fade early (fades out completely by p=0.05)
+      if (bg) {
+        const bgOpacity = Math.max(0, 1 - (p * 20));
+        bg.style.opacity = bgOpacity;
+      }
+
+      if (beat !== activeBeat) {
+        activeBeat = beat;
+        beats.forEach((el, i) => {
+          const on = i + 1 === beat;
+          el.classList.toggle('is-active', on);
+          el.setAttribute('aria-hidden', on ? 'false' : 'true');
+        });
+
+        // Show chrome only on beats 2-5
+        if (beat > 1) {
+          chrome.style.opacity = 1;
+          rail.style.opacity = 1;
+          const logicalBeat = beat - 1; // 1 to 4
+          if (counterEl) counterEl.textContent = '0' + logicalBeat;
+          railMarks.forEach((el, i) => el.classList.toggle('is-active', i + 1 === logicalBeat));
+        } else {
+          chrome.style.opacity = 0;
+          rail.style.opacity = 0;
+        }
+      }
+    }
+
+    function tick() {
+      const p = getProgress();
+      scrollState._p    = p;
+      scrollState._beat = beatFromP(p);
+      updateUI(scrollState._beat, p);
+      
+      if (!hinted && p > 0.05 && hint) {
+        hinted = true;
+        hint.classList.add('is-hidden');
+      }
+    }
+
+    let raf = false;
+    window.addEventListener('scroll', () => {
+      if (!raf) { raf = true; requestAnimationFrame(() => { tick(); raf = false; }); }
+    }, { passive: true });
+    requestAnimationFrame(tick);
+
+    const load3D = () => {
+      const defer = window.requestIdleCallback
+        ? (cb) => window.requestIdleCallback(cb, { timeout: 2000 })
+        : (cb) => setTimeout(cb, 200);
+
+      defer(async () => {
+        try {
+          const tc = document.createElement('canvas');
+          if (!tc.getContext('webgl2') && !tc.getContext('webgl')) throw new Error('NO_WEBGL');
+          const { initHeroScene } = await import('../scripts/hero-scene.js');
+          await initHeroScene(canvas, section, scrollState);
+          canvas.classList.add('hero__canvas--ready');
+        } catch (e) {
+          console.warn('[Hero] 3D failed:', e.message);
+        }
+      });
+    };
+
+    if (document.readyState === 'complete') { load3D(); }
+    else { window.addEventListener('load', load3D, { once: true }); }
+  }
+</script>
+
 <style>
-  /* ── Sección ───────────────────────────────────────────────── */
   .hero {
-    min-height: 100svh;
+    height: 500svh; /* 5 beats now */
+    position: relative;
+    background-color: var(--bg, #0b0b0c);
+  }
+  @media (max-width: 767px) { .hero { height: 550svh; } }
+
+  .hero__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+  
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/images/bg-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    will-change: opacity;
+  }
+
+  /* Subtitle overlay so text is readable over the image */
+  .hero__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(11,11,12,0.3) 0%, rgba(11,11,12,0.6) 100%);
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 600ms var(--ease, ease);
+    display: block;
+    pointer-events: none;
+  }
+  .hero__canvas--ready { opacity: 1; }
+
+  .hero__beats {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .hero__beat {
+    position: absolute;
+    inset: 0;
+    padding: var(--sp-6) var(--gutter);
     display: flex;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 500ms var(--ease, ease), transform 500ms var(--ease, ease);
+    pointer-events: none;
+  }
+  .hero__beat.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Beat 1 styles (Oryzo style intro) */
+  .hero__beat--intro {
     flex-direction: column;
-    justify-content: flex-end;
-    padding-block: var(--sp-8) var(--sp-8);
+    justify-content: space-between;
+    padding-top: 2svh;
+    padding-bottom: 2svh;
+  }
+  
+  .hero__intro-title {
+    font-family: var(--font-headline, sans-serif);
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 1.1;
+    margin: 0;
+    color: #f4f4f0; /* Off-white / cream for premium feel */
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .hero__intro-cards {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 5svh;
+  }
+
+  .hero__glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    color: #fff;
+  }
+  
+  .hero__glass-card--left {
+    max-width: 300px;
     position: relative;
   }
-
-  /* ── Layout principal: columnas en desktop ─────────────────── */
-  .hero__inner {
-    display: grid;
-    /* móvil: columna única, invertida (3D arriba, texto abajo) */
-    grid-template-columns: 1fr;
-    grid-template-rows: 45svh auto;
-    gap: var(--sp-6);
-    align-items: end;
+  
+  .hero__glass-card--left::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin: 1rem 0;
   }
 
-  /* En desktop: dos columnas lado a lado */
-  @media (min-width: 768px) {
-    .hero__inner {
-      grid-template-columns: 60fr 40fr;
-      grid-template-rows: auto;
-      align-items: center;
-      min-height: calc(100svh - var(--sp-16));
-    }
+  .hero__glass-card--right {
+    max-width: 400px;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+  }
+  
+  .hero__glass-title {
+    font-family: var(--font-headline, sans-serif);
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
-  /* ── Columna texto ─────────────────────────────────────────── */
-  .hero__text {
+  .hero__glass-text {
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .hero__glass-desc {
+    font-family: var(--font-body, sans-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .hero__scroll-indicator {
     display: flex;
     flex-direction: column;
-    gap: var(--sp-5);
-    /* en móvil: aparece debajo del contenedor 3D (orden natural) */
-    order: 2;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: center;
+    color: #fff;
+    opacity: 0.7;
+    font-family: var(--font-body, sans-serif);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    transition: opacity 400ms ease;
+  }
+  .hero__scroll-indicator svg {
+    animation: bounce 2s infinite ease-in-out;
+  }
+  .hero__scroll-indicator.is-hidden {
+    opacity: 0;
   }
 
-  @media (min-width: 768px) {
-    .hero__text {
-      order: 1;
-      gap: var(--sp-6);
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(6px); }
+    60% { transform: translateY(3px); }
+  }
+
+  @media (max-width: 767px) {
+    .hero__intro-cards {
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-start;
     }
   }
 
-  /* ── Overline ──────────────────────────────────────────────── */
+  /* Beats 2-5 styles (Original content) */
+  .hero__beat--content {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hero__beat-left {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 50%;
+  }
+  
+  @media (min-width: 768px) {
+    .hero__beat-left {
+      margin-left: 3vw;
+      max-width: 45%;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .hero__beat--content {
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 120px;
+    }
+    .hero__beat-left {
+      max-width: 100%;
+      margin-right: 0;
+    }
+  }
+
   .hero__overline {
     font-family: var(--font-body);
     font-weight: 500;
@@ -102,98 +453,36 @@
     padding-left: var(--sp-3);
   }
 
-  /* ── Titular fluido ────────────────────────────────────────── */
-  /*
-     Escala recalculada para no romperse en 360px:
-     - 360px → ~48px (3rem)
-     - 390px → ~52px
-     - 768px → ~80px
-     - 1440px → ~108px (6.75rem)
-     Fórmula: clamp(3rem, 11.5vw + 0.5rem, 6.75rem)
-  */
   .hero__headline {
-    font-size: clamp(3rem, 11.5vw + 0.5rem, 6.75rem);
-    max-width: 12ch;
-    /* line-height y uppercase vienen de .headline en global.css */
+    font-family: var(--font-headline);
+    font-size: clamp(4rem, 12vw, 6.5rem);
+    font-weight: 400;
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--text, #fff);
   }
+  .accent { color: var(--red); }
 
-  /* ── Cuerpo ────────────────────────────────────────────────── */
-  .hero__body {
+  .hero__beat-body {
+    font-family: var(--font-body);
     font-size: var(--fs-sm);
     color: var(--muted);
-    max-width: 36ch;
     line-height: 1.7;
+    margin: 0;
+  }
+  .hero__beat-body--schedule {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.04em;
   }
 
-  /* ── CTAs ──────────────────────────────────────────────────── */
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-3);
     padding-top: var(--sp-2);
   }
-
-  /* ── Contenedor 3D ─────────────────────────────────────────── */
-  .hero__3d {
-    /* móvil: aparece arriba (order 1), altura 45svh */
-    order: 1;
-    height: 45svh;
-    width: 100%;
-    border: var(--border);
-    border-radius: var(--radius);
-    background-color: var(--surface);
-    /* Placeholder visual discreto — sin gradientes */
-    position: relative;
-  }
-
-  /* Label de placeholder (se quita cuando llegue el 3D) */
-  .hero__3d::after {
-    content: '3D';
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-body);
-    font-weight: 500;
-    font-size: var(--fs-xs);
-    color: var(--line);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  @media (min-width: 768px) {
-    .hero__3d {
-      order: 2;
-      height: 100%;
-      min-height: 420px;
-      /* quita el borde en desktop si prefieres invisible */
-    }
-  }
-
-  /* ── Indicador scroll ──────────────────────────────────────── */
-  .hero__scroll {
-    position: absolute;
-    bottom: var(--sp-6);
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--font-body);
-    font-weight: 500;
-    font-size: 0.75rem;       /* 12px fijo */
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-    opacity: 0.6;
-    animation: scroll-pulse 2.4s var(--ease) infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes scroll-pulse {
-    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
-    50%       { opacity: 1;   transform: translateX(-50%) translateY(4px); }
-  }
-
-  /* ── Botones ───────────────────────────────────────────────── */
+  
   .btn {
     display: inline-flex;
     align-items: center;
@@ -204,39 +493,72 @@
     padding: var(--sp-3) var(--sp-6);
     border-radius: var(--radius-pill);
     border: 1px solid transparent;
-    transition:
-      background-color var(--dur) var(--ease),
-      color            var(--dur) var(--ease),
-      border-color     var(--dur) var(--ease);
-    white-space: nowrap;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: background-color 300ms, border-color 300ms, color 300ms;
   }
+  .btn--primary { background-color: var(--red); color: var(--text); border-color: var(--red); }
+  .btn--primary:hover, .btn--primary:focus-visible { background-color: #b80f17; border-color: #b80f17; }
+  .btn--ghost { background-color: transparent; color: var(--text); border-color: var(--line); }
+  .btn--ghost:hover, .btn--ghost:focus-visible { border-color: var(--muted); }
+  .btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 
-  .btn--primary {
+  /* Chrome and Rail (from original) */
+  .hero__chrome {
+    position: absolute;
+    bottom: var(--sp-6);
+    left: var(--gutter);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    pointer-events: none;
+  }
+  .hero__counter {
+    font-family: var(--font-headline);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+  .hero__counter-current { color: var(--text); font-size: 1rem; }
+
+  .hero__rail {
+    position: absolute;
+    bottom: var(--sp-6);
+    right: var(--gutter);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 120px;
+  }
+  .hero__rail-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    border-left: 1px dotted var(--line);
+  }
+  .hero__rail-mark {
+    position: relative;
+    z-index: 1;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--line);
+    border: 1px dotted var(--line);
+    padding: 0;
+    transition: background-color 250ms var(--ease), border-color 250ms var(--ease);
+  }
+  .hero__rail-mark.is-active {
     background-color: var(--red);
-    color: var(--text);
     border-color: var(--red);
   }
-  .btn--primary:hover,
-  .btn--primary:focus-visible {
-    background-color: #b80f17;
-    border-color: #b80f17;
-  }
 
-  .btn--ghost {
-    background-color: transparent;
-    color: var(--text);
-    border-color: var(--line);
-  }
-  .btn--ghost:hover,
-  .btn--ghost:focus-visible {
-    border-color: var(--muted);
-  }
-
-  .btn:focus-visible {
-    outline: 2px solid var(--red);
-    outline-offset: 3px;
-  }
 </style>

@@ -1,14 +1,18 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
 ---
 <BaseLayout
   title="Body Work Gym & Fitness — Entrena Diferente"
-  description="El gimnasio que te exige tanto como tú mismo. Sin excusas, sin límites. Body Work Gym & Fitness, Monterrey."
+  description="El gimnasio que te exige tanto como tú mismo. Sin excusas, sin límites. Body Work Gym & Fitness, Cuautitlán Izcalli."
 >
   <Nav />
   <main>
     <Hero />
+    <!-- Sección de prueba para scroll -->
+    <section style="height: 100vh; display: flex; align-items: center; justify-content: center; background: #111; border-top: 1px dotted var(--line);">
+      <p style="color: var(--muted); font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.1em;">Próxima Sección</p>
+    </section>
   </main>
 </BaseLayout>
