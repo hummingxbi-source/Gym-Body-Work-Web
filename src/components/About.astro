@@ -1,0 +1,255 @@
+---
+import { Picture } from 'astro:assets';
+import aboutMain from '../assets/photos/about-main.jpg';
+import aboutDetail from '../assets/photos/about-detail.jpg';
+
+const mainPhoto = aboutMain;
+const secPhoto = aboutDetail;
+---
+
+<section class="about section-reveal" id="nosotros" aria-labelledby="about-title">
+  <div class="container about__container">
+    
+    <div class="about__media">
+      <div class="about__media-main">
+        <div class="about__frame" aria-hidden="true"></div>
+        <Picture 
+          src={mainPhoto} 
+          alt="Vista general de la nave de Body Work con techo arqueado y máquinas rojas" 
+          width={1600} 
+          height={2000} 
+          formats={['avif', 'webp']}
+          widths={[480, 800, 1200, 1600]} 
+          sizes="(max-width: 768px) 100vw, 50vw"
+          loading="lazy"
+          decoding="async"
+          class="about__img about__img--main" 
+          style="object-position: 50% 50%;"
+        />
+      </div>
+      <div class="about__media-secondary">
+        <Picture 
+          src={secPhoto} 
+          alt="Máquina de press con el logo de Body Work en el respaldo" 
+          width={1200} 
+          height={1200} 
+          formats={['avif', 'webp']}
+          widths={[480, 800, 1200]}
+          sizes="(max-width: 768px) 50vw, 30vw"
+          loading="lazy"
+          decoding="async"
+          class="about__img about__img--sec" 
+          style="object-position: 50% 50%;"
+        />
+      </div>
+    </div>
+
+    <div class="about__content">
+      <p class="overline">Conócenos</p>
+      <h2 id="about-title" class="headline about__headline">
+        Un gym hecho para quien se toma esto en <span class="accent">serio.</span>
+      </h2>
+      
+      <div class="about__text">
+        <p>
+          Fundado en [POR CONFIRMAR: año de apertura] por [POR CONFIRMAR: quién lo fundó], Body Work nació con una idea muy clara: crear un espacio donde la excusa no tiene lugar. Nos alejamos del concepto de club social para enfocarnos en lo que de verdad importa: resultados reales a través de entrenamiento pesado y constante.
+        </p>
+        <p>
+          A lo largo de los años, hemos reunido a una comunidad de más de [POR CONFIRMAR: cuántos socios/miembros] miembros que comparten nuestra mentalidad. Nuestras instalaciones están diseñadas para soportar el nivel más exigente, equipadas para todo tipo de rutinas desde hipertrofia hasta acondicionamiento atlético.
+        </p>
+      </div>
+
+      <div class="about__stats">
+        <div class="stat">
+          <span class="stat__val headline">[X]</span>
+          <span class="stat__lbl">Años de historia</span>
+        </div>
+        <div class="stat__div" aria-hidden="true"></div>
+        <div class="stat">
+          <span class="stat__val headline">[XX]+</span>
+          <span class="stat__lbl">Máquinas</span>
+        </div>
+        <div class="stat__div" aria-hidden="true"></div>
+        <div class="stat">
+          <span class="stat__val headline">4:30<span class="stat__sm">a.m.</span></span>
+          <span class="stat__lbl">Apertura</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: var(--sp-24);
+    background-color: var(--bg);
+    overflow: hidden;
+  }
+
+  .about__container {
+    display: grid;
+    gap: var(--sp-12);
+  }
+
+  /* Editorial Layout */
+  @media (min-width: 992px) {
+    .about__container {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--sp-16);
+    }
+    
+    /* Swap order on desktop so text is left, media is right */
+    .about__media {
+      order: 2;
+    }
+    .about__content {
+      order: 1;
+      padding-right: var(--sp-8);
+    }
+  }
+
+  /* Overline (reused logic from hero) */
+  .overline {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-left: 2px solid var(--red);
+    padding-left: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+
+  .about__headline {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    margin-bottom: var(--sp-8);
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .about__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    font-size: var(--fs-base);
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: var(--sp-12);
+  }
+
+  .about__text p {
+    max-width: 600px;
+  }
+
+  /* Stats Strip */
+  .about__stats {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-6);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+  }
+
+  .stat__val {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--text);
+    line-height: 1;
+  }
+  
+  .stat__sm {
+    font-size: 0.5em;
+    margin-left: 0.1em;
+  }
+
+  .stat__lbl {
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .stat__div {
+    width: 1px;
+    height: 48px;
+    border-left: var(--border);
+  }
+
+  @media (max-width: 500px) {
+    .about__stats {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--sp-6);
+    }
+    .stat__div {
+      width: 100%;
+      height: 1px;
+      border-left: none;
+      border-top: var(--border);
+    }
+  }
+
+  /* Media Composition */
+  .about__media {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
+  }
+
+  .about__media-main {
+    position: relative;
+    z-index: 2;
+  }
+
+  .about__frame {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--red);
+    transform: translate(12px, 12px);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .about__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    background-color: var(--surface);
+  }
+  
+  .about__img--main {
+    aspect-ratio: 4/5;
+  }
+
+  .about__media-secondary {
+    position: absolute;
+    bottom: -10%;
+    left: -15%;
+    width: 50%;
+    z-index: 3;
+    border: 8px solid var(--bg);
+  }
+
+  .about__img--sec {
+    aspect-ratio: 1/1;
+  }
+
+  @media (max-width: 768px) {
+    .about__media-secondary {
+      left: auto;
+      right: -5%;
+      bottom: -5%;
+      width: 45%;
+    }
+  }
+</style>

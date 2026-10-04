@@ -1,0 +1,361 @@
+---
+import { shortTermPackages, longTermPackages, baseMonthlyPrice } from '../data/pricing';
+import { site } from '../data/site';
+
+const formatPrice = (p: number) => 
+  new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(p);
+const formatDaily = (p: number) => 
+  new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(p);
+
+// Generates whatsapp link for a package
+const getWaLink = (name: string, price: number) => {
+  const msg = `Hola, me interesa el paquete ${name} (${formatPrice(price)}) de Body Work Gym.`;
+  return `https://wa.me/${site.phone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+};
+---
+
+<section class="pricing section-reveal" id="paquetes" aria-labelledby="pricing-title">
+  <div class="container">
+    <div class="pricing__header">
+      <p class="overline">Paquetes</p>
+      <h2 id="pricing-title" class="headline pricing__title">Elige cómo entrenas</h2>
+    </div>
+
+    <!-- Zona A: Para probar -->
+    <div class="pricing__zone pricing__zone--a">
+      <h3 class="zone-title">Para probar</h3>
+      <dl class="pricing-table">
+        {shortTermPackages.map((pkg) => (
+          <div class="pricing-table__row">
+            <dt class="pricing-table__name headline">{pkg.name}</dt>
+            <div class="pricing-table__dots" aria-hidden="true"></div>
+            <dd class="pricing-table__val">
+              <span class="pricing-table__price headline">{formatPrice(pkg.price)}</span>
+              <a href={getWaLink(pkg.name, pkg.price)} target="_blank" rel="noopener" class="pricing-btn pricing-btn--ghost" aria-label={`Contratar paquete ${pkg.name}`}>Contratar</a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <!-- Zona B: Para comprometerte -->
+    <div class="pricing__zone pricing__zone--b">
+      <h3 class="zone-title">Para comprometerte</h3>
+      <div class="pricing-cards">
+        {longTermPackages.map((pkg) => {
+          const daily = pkg.price / pkg.days;
+          const costIfMonthly = pkg.months * baseMonthlyPrice;
+          const savings = costIfMonthly - pkg.price;
+          const savingsPct = Math.round((savings / costIfMonthly) * 100);
+          const isBest = pkg.id === 'anualidad';
+
+          return (
+            <div class={`pricing-card ${isBest ? 'pricing-card--best' : ''}`}>
+              {isBest && <div class="pricing-card__badge">Mejor precio por día</div>}
+              <div class="pricing-card__head">
+                <h4 class="headline pricing-card__name">{pkg.name}</h4>
+                <div class="pricing-card__price-wrap">
+                  <span class="headline pricing-card__price">{formatPrice(pkg.price)}</span>
+                </div>
+              </div>
+              
+              <div class="pricing-card__metrics">
+                <div class="metric">
+                  <span class="metric__val">{formatDaily(daily)}</span>
+                  <span class="metric__lbl">al día</span>
+                </div>
+                {savings > 0 && (
+                  <div class="metric metric--save">
+                    <span class="metric__val">Ahorras {formatPrice(savings)}</span>
+                    <span class="metric__lbl">({savingsPct}%)</span>
+                  </div>
+                )}
+              </div>
+
+              <div class="pricing-card__foot">
+                <a href={getWaLink(pkg.name, pkg.price)} target="_blank" rel="noopener" class={`pricing-btn ${isBest ? 'pricing-btn--primary' : 'pricing-btn--ghost'}`}>
+                  Seleccionar
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <div class="pricing__footer">
+      <p>Precios sujetos a cambio. Confirma en recepción.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    padding-block: var(--sp-24);
+    background-color: var(--bg);
+  }
+
+  .pricing__header {
+    margin-bottom: var(--sp-16);
+  }
+
+  .pricing__title {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    color: var(--text);
+    margin: 0;
+  }
+
+  .overline {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-left: 2px solid var(--red);
+    padding-left: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+
+  .zone-title {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-base);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--sp-6);
+  }
+
+  .pricing__zone {
+    margin-bottom: var(--sp-16);
+  }
+
+  /* Zone A: Table */
+  .pricing-table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    max-width: 800px;
+  }
+
+  .pricing-table__row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+
+  .pricing-table__name {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--text);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .pricing-table__dots {
+    flex-grow: 1;
+    height: 14px;
+    border-bottom: 2px dotted var(--line);
+  }
+
+  .pricing-table__val {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-6);
+    margin: 0;
+  }
+
+  .pricing-table__price {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--text);
+  }
+
+  /* Zone B: Cards */
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+  }
+
+  .pricing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    padding: var(--sp-8) var(--sp-6);
+    transition: transform 300ms var(--ease), border-color 300ms var(--ease);
+  }
+
+  .pricing-card--best {
+    border-color: var(--red);
+  }
+
+  .pricing-card__badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--red);
+    color: var(--text);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+
+  .pricing-card__head {
+    margin-bottom: var(--sp-8);
+  }
+
+  .pricing-card__name {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    color: var(--text);
+    margin: 0 0 var(--sp-2) 0;
+  }
+
+  .pricing-card__price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .pricing-card__price {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .pricing-card__metrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-8);
+    flex-grow: 1;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .metric__val {
+    font-size: var(--fs-base);
+    font-weight: 500;
+    color: var(--text);
+  }
+  
+  .metric__lbl {
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+
+  .metric--save .metric__val {
+    color: var(--red);
+  }
+
+  .pricing-card__foot {
+    margin-top: auto;
+  }
+
+  /* Buttons */
+  .pricing-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    padding-inline: var(--sp-6);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+
+  .pricing-btn--ghost {
+    background-color: transparent;
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+  .pricing-btn--ghost:hover, .pricing-btn--ghost:focus-visible {
+    border-color: var(--muted);
+  }
+
+  .pricing-btn--primary {
+    background-color: var(--red);
+    border: 1px solid var(--red);
+    color: var(--text);
+  }
+  .pricing-btn--primary:hover, .pricing-btn--primary:focus-visible {
+    background-color: #b80f17;
+    border-color: #b80f17;
+  }
+
+  .pricing__footer {
+    text-align: center;
+    margin-top: var(--sp-8);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+  }
+
+  /* Mobile */
+  @media (max-width: 1024px) {
+    .pricing-cards {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-6);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pricing-cards {
+      grid-template-columns: 1fr;
+    }
+    
+    /* Zone A Mobile Redesign */
+    .pricing-table__row {
+      flex-direction: column;
+      align-items: stretch;
+      padding-block: var(--sp-6);
+      border-bottom: 1px dotted var(--line);
+    }
+    .pricing-table__row:last-child {
+      border-bottom: none;
+    }
+    
+    .pricing-table__dots {
+      display: none;
+    }
+    
+    .pricing-table__name {
+      text-align: center;
+      font-size: 2.25rem;
+      margin-bottom: var(--sp-2);
+    }
+    
+    .pricing-table__val {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-4);
+      width: 100%;
+    }
+    
+    .pricing-table__price {
+      font-size: 3rem;
+      color: var(--text);
+    }
+    
+    .pricing-btn {
+      width: 100%;
+      min-height: 54px;
+    }
+  }
+
+  /* Wait, removed the max-width 600px block since max-width 767px covers it */
+</style>

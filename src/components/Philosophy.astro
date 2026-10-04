@@ -1,0 +1,130 @@
+---
+---
+
+<section class="philosophy section-reveal" aria-labelledby="philosophy-title">
+  <div class="container">
+    
+    <div class="philosophy__header">
+      <h2 id="philosophy-title" class="headline philosophy__title">
+        <span class="philosophy__stroke">Diferente</span><br />
+        <span class="philosophy__solid">Entrena</span><br />
+        <span class="philosophy__stroke">Diferente</span>
+      </h2>
+    </div>
+
+    <div class="philosophy__principles">
+      <ol class="principles-list">
+        <li class="principle">
+          <span class="principle__num headline">01</span>
+          <div class="principle__content">
+            <h3 class="principle__name headline">Exigencia</h3>
+            <p class="principle__desc">Un espacio diseñado para sacar tu mejor versión.</p>
+          </div>
+        </li>
+        <li class="principle">
+          <span class="principle__num headline">02</span>
+          <div class="principle__content">
+            <h3 class="principle__name headline">Constancia</h3>
+            <p class="principle__desc">Los resultados se construyen todos los días.</p>
+          </div>
+        </li>
+        <li class="principle">
+          <span class="principle__num headline">03</span>
+          <div class="principle__content">
+            <h3 class="principle__name headline">Comunidad</h3>
+            <p class="principle__desc">Personas dedicadas y con buenos valores que se apoyan mutuamente.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    padding-block: var(--sp-16) var(--sp-24);
+    background-color: var(--bg);
+    overflow: hidden;
+  }
+
+  .philosophy__header {
+    margin-bottom: var(--sp-16);
+    text-align: center;
+  }
+
+  .philosophy__title {
+    font-size: clamp(4rem, 15vw, 12rem);
+    line-height: 0.85;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .philosophy__stroke {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--muted);
+  }
+  
+  .philosophy__solid {
+    color: var(--text);
+  }
+
+  /* Principles List */
+  .principles-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: var(--border);
+  }
+
+  .principle {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-6);
+    padding-block: var(--sp-8);
+    border-bottom: var(--border);
+  }
+
+  .principle__num {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: var(--red);
+    line-height: 0.8;
+  }
+
+  .principle__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .principle__name {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--text);
+    margin: 0;
+  }
+
+  .principle__desc {
+    font-size: var(--fs-base);
+    color: var(--muted);
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .principles-list {
+      grid-template-columns: repeat(3, 1fr);
+      border-top: none;
+      border-left: var(--border);
+    }
+    
+    .principle {
+      flex-direction: column;
+      border-bottom: none;
+      border-right: var(--border);
+      padding: var(--sp-8) var(--sp-6);
+      gap: var(--sp-8);
+    }
+    
+    .principle__content {
+      gap: var(--sp-4);
+    }
+  }
+</style>

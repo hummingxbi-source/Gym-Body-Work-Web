@@ -1,19 +1,76 @@
 ---
-// Nav.astro — Sticky top navigation bar
-// Minimal: logo left, future nav links right.
+// Nav.astro — Sticky top navigation + full-screen mobile menu.
+import BrandMark from './BrandMark.astro';
+import { site } from '../data/site';
+
+const links = [
+  { href: '#nosotros', label: 'Conócenos' },
+  { href: '#instalaciones', label: 'Instalaciones' },
+  { href: '#paquetes', label: 'Paquetes' },
+  { href: '#contacto', label: 'Ubicación' },
+];
 ---
-<header class="nav">
+<header class="nav" id="site-nav">
   <div class="container nav__inner">
-    <a href="/" class="nav__logo" aria-label="Body Work Gym &amp; Fitness — Inicio">
-      <span class="nav__logo-main headline">Body Work</span>
-      <span class="nav__logo-sub">GYM &amp; FITNESS</span>
+    <a href="/" class="nav__logo" aria-label="Body Work Gym & Fitness — Inicio">
+      <BrandMark variant="light" size={30} />
+      <span class="nav__logo-text">
+        <span class="nav__logo-main headline">Body Work</span>
+        <span class="nav__logo-sub">GYM &amp; FITNESS</span>
+      </span>
     </a>
-    <nav aria-label="Navegación principal">
+
+    <nav class="nav__desktop" aria-label="Navegación principal">
       <ul class="nav__links">
-        <li>
-          <span class="nav__location">| CUAUTITLÁN IZCALLI</span>
-        </li>
+        {links.map((l) => (
+          <li><a class="nav__link" href={l.href} data-nav-link>{l.label}</a></li>
+        ))}
       </ul>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="#paquetes" class="nav__cta" id="nav-cta">Únete</a>
+      <a
+        href={site.whatsappUrl}
+        class="nav__wa"
+        id="nav-whatsapp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Escríbenos por WhatsApp"
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </a>
+      <button
+        type="button"
+        class="nav__toggle"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="nav-overlay"
+        aria-label="Abrir menú"
+      >
+        <span class="nav__burger" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nav__overlay" id="nav-overlay" role="dialog" aria-modal="true" aria-label="Menú">
+    <nav class="nav__overlay-inner" aria-label="Navegación móvil">
+      <ul class="nav__big-links">
+        {links.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a class="nav__big-link headline" href={l.href} data-nav-link>
+              <span class="nav__big-num" aria-hidden="true">0{i + 1}</span>{l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="nav__overlay-foot" style={`--i:${links.length}`}>
+        <a href="#paquetes" class="nav__cta nav__cta--block">Únete</a>
+        <p class="nav__meta">
+          <a href={site.phoneHref}>{site.phone}</a><br />
+          <a href={site.mapsUrl} target="_blank" rel="noopener">{site.address}</a>
+        </p>
+      </div>
     </nav>
   </div>
 </header>
@@ -23,55 +80,314 @@
     position: sticky;
     top: 0;
     z-index: 200;
+    height: var(--nav-h);
     background-color: var(--bg);
     border-bottom: var(--border);
   }
 
   .nav__inner {
+    position: relative;
+    z-index: 2; /* bar stays above the overlay */
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 56px;
-    padding-block: var(--sp-3);
+    gap: var(--sp-4);
   }
 
+  /* Logo */
   .nav__logo {
     display: flex;
-    flex-direction: column;
-    gap: 1px;
+    align-items: center;
+    gap: var(--sp-3);
+    min-height: 48px;
     line-height: 1;
-    text-decoration: none;
+    flex-shrink: 0;
   }
-
+  .nav__logo-text { display: flex; flex-direction: column; gap: 2px; }
   .nav__logo-main {
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     color: var(--text);
     letter-spacing: 0.02em;
   }
-
   .nav__logo-sub {
-    font-family: var(--font-body);
     font-weight: 500;
     font-size: var(--fs-xs);
     color: var(--muted);
-    text-transform: uppercase;
     letter-spacing: 0.15em;
   }
 
-  .nav__links {
-    display: flex;
-    gap: var(--sp-6);
+  /* Desktop links */
+  .nav__desktop { display: none; }
+  .nav__links { display: flex; align-items: center; gap: var(--sp-2); }
+  .nav__link {
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    min-height: 48px;
+    padding-inline: var(--sp-3);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color var(--dur) var(--ease);
+  }
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: var(--sp-3);
+    right: var(--sp-3);
+    bottom: 10px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+  .nav__link:hover { color: var(--text); }
+  .nav__link[aria-current='location'] { color: var(--text); }
+  .nav__link[aria-current='location']::after { transform: scaleX(1); }
+
+  /* Actions */
+  .nav__actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+  .nav__cta {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding-inline: var(--sp-6);
+    border-radius: var(--radius-pill);
+    background: var(--red);
+    color: var(--text);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform var(--dur) var(--ease), filter var(--dur) var(--ease);
+  }
+  .nav__cta:hover { filter: brightness(1.12); transform: translateY(-1px); }
+  .nav__cta:active { transform: translateY(0); }
+
+  .nav__wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--red);
+    color: var(--text);
+    transition: filter var(--dur) var(--ease);
+  }
+  .nav__wa:hover { filter: brightness(1.12); }
+
+  .nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    color: var(--text);
+    border-radius: var(--radius-pill);
+  }
+  .nav__burger { position: relative; width: 24px; height: 14px; display: block; }
+  .nav__burger span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transition: transform var(--dur) var(--ease), top var(--dur) var(--ease);
+  }
+  .nav__burger span:nth-child(1) { top: 0; }
+  .nav__burger span:nth-child(2) { top: 12px; }
+  .nav__toggle[aria-expanded='true'] .nav__burger span:nth-child(1) { top: 6px; transform: rotate(45deg); }
+  .nav__toggle[aria-expanded='true'] .nav__burger span:nth-child(2) { top: 6px; transform: rotate(-45deg); }
+
+  /* Focus */
+  .nav a:focus-visible,
+  .nav button:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
   }
 
-  .nav__location {
+  /* Overlay (mobile only) */
+  .nav__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    height: 100dvh;
+    padding-top: var(--nav-h);
+    background: var(--bg);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 250ms var(--ease), visibility 0s linear 250ms;
+  }
+  .nav__overlay[data-open] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 250ms var(--ease), visibility 0s;
+  }
+  .nav__overlay-inner {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--sp-6) var(--gutter) var(--sp-8);
+  }
+  .nav__big-links li { border-bottom: var(--border); }
+  .nav__big-link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    min-height: 64px;
+    padding-block: var(--sp-3);
+    font-size: clamp(2.75rem, 14vw, 4.5rem);
+    color: var(--text);
+    transition: color var(--dur) var(--ease);
+  }
+  .nav__big-num {
     font-family: var(--font-body);
-    font-weight: 500;
     font-size: var(--fs-xs);
-    color: var(--muted);
+    font-weight: 500;
     letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+  .nav__big-link[aria-current='location'] { color: var(--red); }
+
+  .nav__overlay-foot { display: grid; gap: var(--sp-6); padding-top: var(--sp-8); }
+  .nav__cta--block { display: flex; width: 100%; min-height: 56px; font-size: var(--fs-base); }
+  .nav__meta { font-size: var(--fs-sm); color: var(--muted); line-height: 1.8; }
+  .nav__meta a { display: inline-block; min-height: 32px; }
+  .nav__meta a:hover { color: var(--text); }
+
+  /* Entrance stagger */
+  .nav__big-links li,
+  .nav__overlay-foot {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 350ms var(--ease), transform 350ms var(--ease);
+    transition-delay: 0ms;
+  }
+  .nav__overlay[data-open] .nav__big-links li,
+  .nav__overlay[data-open] .nav__overlay-foot {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(80ms + var(--i, 0) * 60ms);
+  }
+
+  @media (min-width: 768px) {
+    .nav__desktop { display: block; }
+    .nav__cta { display: inline-flex; }
+    .nav__wa, .nav__toggle { display: none; }
+    .nav__overlay { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav *,
+    .nav *::before,
+    .nav *::after { transition-duration: 0.01ms !important; transition-delay: 0ms !important; }
+    .nav__big-links li, .nav__overlay-foot { transform: none; }
   }
 </style>
+
+<script>
+  const nav = document.getElementById('site-nav');
+  const toggle = document.getElementById('nav-toggle');
+  const overlay = document.getElementById('nav-overlay');
+
+  if (nav && toggle && overlay) {
+    const desktop = window.matchMedia('(min-width: 768px)');
+    let isOpen = false;
+    const outside = () =>
+      Array.from(document.body.children).filter((el) => el !== nav && el.tagName !== 'SCRIPT');
+
+    const focusables = () =>
+      Array.from(
+        nav.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+      ).filter((el) => el.offsetParent !== null || el === toggle);
+
+    const setOpen = (open: boolean, restoreFocus = true) => {
+      if (open === isOpen) return;
+      isOpen = open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      overlay.toggleAttribute('data-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+      outside().forEach((el) => ((el as HTMLElement).inert = open));
+      if (open) {
+        (overlay.querySelector('a[href]') as HTMLElement | null)?.focus({ preventScroll: true });
+      } else if (restoreFocus) {
+        toggle.focus({ preventScroll: true });
+      }
+    };
+
+    toggle.addEventListener('click', () => setOpen(!isOpen));
+
+    // Selecting any link inside the overlay closes it (before the anchor jump).
+    overlay.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a[href]')) setOpen(false, false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !nav.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !nav.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    desktop.addEventListener('change', (e) => {
+      if (e.matches) setOpen(false, false);
+    });
+
+    // Active link by visible section (viewport middle band).
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'));
+    const map = new Map<string, HTMLAnchorElement[]>();
+    links.forEach((a) => {
+      const id = a.getAttribute('href')?.slice(1);
+      if (id) map.set(id, [...(map.get(id) ?? []), a]);
+    });
+    const targets = [...map.keys()]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+
+    if (targets.length && 'IntersectionObserver' in window) {
+      const visible = new Set<string>();
+      const paint = () => {
+        // Last section in DOM order that is crossing the band wins.
+        const current = targets.filter((t) => visible.has(t.id)).pop()?.id;
+        links.forEach((a) => {
+          if (a.getAttribute('href') === `#${current}`) a.setAttribute('aria-current', 'location');
+          else a.removeAttribute('aria-current');
+        });
+      };
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => (en.isIntersecting ? visible.add(en.target.id) : visible.delete(en.target.id)));
+          paint();
+        },
+        { rootMargin: '-45% 0px -50% 0px' }
+      );
+      targets.forEach((t) => io.observe(t));
+    }
+  }
+</script>

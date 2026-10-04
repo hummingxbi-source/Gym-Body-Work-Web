@@ -81,8 +81,8 @@
             Empieza<br /><span class="accent">hoy.</span>
           </h2>
           <p class="hero__beat-body hero__beat-body--schedule">
-            Lun&ndash;Vie: 4:30&nbsp;a.m.&ndash;10&nbsp;p.m.<br />
-            Sab: 6&nbsp;a.m.&ndash;8&nbsp;p.m. &middot; Dom: 8&nbsp;a.m.&ndash;3&nbsp;p.m.
+            Lunes a Viernes: 4:30 a.m. &ndash; 10:30 p.m.<br />
+            Sábado: 7:00 a.m. &ndash; 3:00 p.m. &middot; Domingo: 9:00 a.m. &ndash; 1:00 p.m.
           </p>
           <div class="hero__actions">
             <a href="#contacto" class="btn btn--primary" id="hero-cta-end">Contáctanos</a>
@@ -91,35 +91,19 @@
       </div>
     </div>
 
-    <div class="hero__chrome" id="hero-chrome" aria-hidden="true" style="opacity: 0; transition: opacity 400ms;">
-      <div class="hero__counter" id="hero-counter">
-        <span class="hero__counter-current" id="hero-counter-current">01</span>
-        <span class="hero__counter-sep">&nbsp;/&nbsp;</span>
-        <span class="hero__counter-total">04</span>
-      </div>
-    </div>
-    
-    <div class="hero__rail" id="hero-rail" aria-hidden="true" style="opacity: 0; transition: opacity 400ms;">
-      <div class="hero__rail-line"></div>
-      <button class="hero__rail-mark" data-rail="1" aria-label="Beat 1" tabindex="-1"></button>
-      <button class="hero__rail-mark" data-rail="2" aria-label="Beat 2" tabindex="-1"></button>
-      <button class="hero__rail-mark" data-rail="3" aria-label="Beat 3" tabindex="-1"></button>
-      <button class="hero__rail-mark" data-rail="4" aria-label="Beat 4" tabindex="-1"></button>
-    </div>
+
 
   </div>
 </section>
 
 <script>
+  import { initHeroScene } from '../scripts/hero-scene.js';
+
   const section   = document.getElementById('hero-section');
   const canvas    = document.getElementById('hero-canvas');
   const bg        = document.getElementById('hero-bg');
   const beats     = document.querySelectorAll('.hero__beat');
   const hint      = document.getElementById('hero-scroll-hint');
-  const chrome    = document.getElementById('hero-chrome');
-  const rail      = document.getElementById('hero-rail');
-  const counterEl = document.getElementById('hero-counter-current');
-  const railMarks = document.querySelectorAll('.hero__rail-mark');
 
   if (section && canvas) {
     let activeBeat = 1;
@@ -161,18 +145,6 @@
           el.classList.toggle('is-active', on);
           el.setAttribute('aria-hidden', on ? 'false' : 'true');
         });
-
-        // Show chrome only on beats 2-5
-        if (beat > 1) {
-          chrome.style.opacity = 1;
-          rail.style.opacity = 1;
-          const logicalBeat = beat - 1; // 1 to 4
-          if (counterEl) counterEl.textContent = '0' + logicalBeat;
-          railMarks.forEach((el, i) => el.classList.toggle('is-active', i + 1 === logicalBeat));
-        } else {
-          chrome.style.opacity = 0;
-          rail.style.opacity = 0;
-        }
       }
     }
 
@@ -203,7 +175,6 @@
         try {
           const tc = document.createElement('canvas');
           if (!tc.getContext('webgl2') && !tc.getContext('webgl')) throw new Error('NO_WEBGL');
-          const { initHeroScene } = await import('../scripts/hero-scene.js');
           await initHeroScene(canvas, section, scrollState);
           canvas.classList.add('hero__canvas--ready');
         } catch (e) {
@@ -227,8 +198,8 @@
 
   .hero__stage {
     position: sticky;
-    top: 0;
-    height: 100svh;
+    top: var(--nav-h);
+    height: calc(100svh - var(--nav-h));
     overflow: hidden;
   }
   
@@ -403,10 +374,28 @@
   }
 
   @media (max-width: 767px) {
+    .hero__beat--intro {
+      padding-top: var(--sp-4);
+      padding-bottom: 2svh; /* Bajamos más */
+    }
+    .hero__intro-title {
+      font-size: clamp(3rem, 16vw, 5rem);
+    }
     .hero__intro-cards {
       flex-direction: column;
-      gap: 1.5rem;
-      align-items: flex-start;
+      gap: var(--sp-3);
+      align-items: stretch;
+      margin-bottom: 2svh; /* Bajamos más */
+    }
+    .hero__glass-card {
+      padding: var(--sp-4);
+    }
+    .hero__glass-desc {
+      font-size: 1rem;
+    }
+    .hero__scroll-indicator {
+      transform: scale(0.8);
+      transform-origin: bottom center;
     }
   }
 
@@ -505,60 +494,6 @@
   .btn--ghost:hover, .btn--ghost:focus-visible { border-color: var(--muted); }
   .btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 
-  /* Chrome and Rail (from original) */
-  .hero__chrome {
-    position: absolute;
-    bottom: var(--sp-6);
-    left: var(--gutter);
-    z-index: 30;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--sp-4);
-    pointer-events: none;
-  }
-  .hero__counter {
-    font-family: var(--font-headline);
-    font-size: var(--fs-xs);
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    line-height: 1;
-  }
-  .hero__counter-current { color: var(--text); font-size: 1rem; }
 
-  .hero__rail {
-    position: absolute;
-    bottom: var(--sp-6);
-    right: var(--gutter);
-    z-index: 30;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 120px;
-  }
-  .hero__rail-line {
-    position: absolute;
-    top: 0; bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    border-left: 1px dotted var(--line);
-  }
-  .hero__rail-mark {
-    position: relative;
-    z-index: 1;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: var(--line);
-    border: 1px dotted var(--line);
-    padding: 0;
-    transition: background-color 250ms var(--ease), border-color 250ms var(--ease);
-  }
-  .hero__rail-mark.is-active {
-    background-color: var(--red);
-    border-color: var(--red);
-  }
 
 </style>

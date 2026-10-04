@@ -2,6 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Philosophy from '../components/Philosophy.astro';
+import Facilities from '../components/Facilities.astro';
+import Pricing from '../components/Pricing.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
 ---
 <BaseLayout
   title="Body Work Gym & Fitness — Entrena Diferente"
@@ -10,9 +16,30 @@ import Hero from '../components/Hero.astro';
   <Nav />
   <main>
     <Hero />
-    <!-- Sección de prueba para scroll -->
-    <section style="height: 100vh; display: flex; align-items: center; justify-content: center; background: #111; border-top: 1px dotted var(--line);">
-      <p style="color: var(--muted); font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.1em;">Próxima Sección</p>
-    </section>
+    <About />
+    <Philosophy />
+    <Facilities />
+    <Pricing />
+    <Contact />
   </main>
+  <Footer />
 </BaseLayout>
+
+<script>
+  // Reveal animation for sections
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -15% 0px' });
+
+    document.querySelectorAll('.section-reveal').forEach(el => observer.observe(el));
+  } else {
+    // If reduced motion is preferred or IO is not supported, reveal immediately
+    document.querySelectorAll('.section-reveal').forEach(el => el.classList.add('is-revealed'));
+  }
+</script>

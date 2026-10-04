@@ -1,0 +1,179 @@
+---
+import BrandMark from './BrandMark.astro';
+import { site } from '../data/site';
+
+const currentYear = new Date().getFullYear();
+const links = [
+  { href: '#nosotros', label: 'Conócenos' },
+  { href: '#instalaciones', label: 'Instalaciones' },
+  { href: '#paquetes', label: 'Paquetes' },
+  { href: '#contacto', label: 'Ubicación' },
+];
+---
+
+<footer class="footer">
+  <div class="container footer__container">
+    
+    <div class="footer__brand">
+      <div class="footer__logo">
+        <BrandMark variant="light" size={40} />
+        <span class="footer__logo-text">
+          <span class="headline footer__logo-main">Body Work</span>
+          <span class="footer__logo-sub">GYM & FITNESS</span>
+        </span>
+      </div>
+      <p class="headline footer__slogan">Diferente<br/>entrena<br/>diferente</p>
+    </div>
+
+    <div class="footer__nav">
+      <h3 class="footer__heading">Navegación</h3>
+      <ul class="footer__list">
+        {links.map((link) => (
+          <li><a href={link.href} class="footer__link">{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer__contact">
+      <h3 class="footer__heading">Contacto</h3>
+      <ul class="footer__list">
+        <li>
+          <a href={site.mapsUrl} target="_blank" rel="noopener" class="footer__link">
+            {site.address}
+          </a>
+        </li>
+        <li>
+          <a href={site.phoneHref} class="footer__link">{site.phone}</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="container">
+    <div class="footer__bottom">
+      <p>&copy; {currentYear} Body Work Gym & Fitness. Todos los derechos reservados.</p>
+      <!-- <p class="footer__credit">Hecho por <a href="https://hummingx.com" target="_blank" rel="noopener">HummingX</a></p> -->
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--bg);
+    border-top: 1px dotted var(--line);
+    padding-top: var(--sp-16);
+    padding-bottom: var(--sp-8);
+  }
+
+  .footer__container {
+    display: grid;
+    gap: var(--sp-12);
+    margin-bottom: var(--sp-16);
+  }
+
+  @media (min-width: 768px) {
+    .footer__container {
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: var(--sp-8);
+    }
+  }
+
+  /* Brand Column */
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+  }
+
+  .footer__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+  }
+
+  .footer__logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .footer__logo-main {
+    font-size: clamp(1.2rem, 3vw, 1.75rem);
+    color: var(--text);
+  }
+
+  .footer__logo-sub {
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+
+  .footer__slogan {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 0.9;
+    color: var(--line); /* subtle watermark look */
+    margin: 0;
+  }
+
+  /* Nav & Contact */
+  .footer__heading {
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 var(--sp-4) 0;
+  }
+
+  .footer__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .footer__link {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    transition: color var(--dur) var(--ease);
+  }
+
+  .footer__link:hover, .footer__link:focus-visible {
+    color: var(--red);
+  }
+
+  /* Bottom Bar */
+  .footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-4);
+    border-top: 1px dotted var(--line);
+    padding-top: var(--sp-8);
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .footer__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  .footer__credit a {
+    color: var(--text);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--line);
+    transition: text-decoration-color var(--dur) var(--ease);
+  }
+  .footer__credit a:hover {
+    text-decoration-color: var(--red);
+  }
+</style>

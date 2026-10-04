@@ -1,0 +1,430 @@
+---
+import { site } from '../data/site';
+
+const waMessage = 'Hola, quiero pedir informes sobre Body Work Gym.';
+const waUrl = `https://wa.me/${site.phone.replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`;
+
+// Helper SVG icons
+const mapIcon = `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
+const waIcon = `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>`;
+---
+
+<section class="contact section-reveal" id="contacto" aria-labelledby="contact-title">
+  <div class="container">
+    
+    <div class="contact__header">
+      <p class="overline">Ubicación</p>
+      <h2 id="contact-title" class="headline contact__title">Ven a entrenar</h2>
+    </div>
+
+    <div class="contact__grid">
+      
+      <!-- Columna Izquierda: Info y Horarios -->
+      <div class="contact__info">
+        
+        <div class="info-block">
+          <h3 class="info-block__title">Dirección</h3>
+          <p class="info-block__text">{site.address}</p>
+        </div>
+
+        <div class="info-block">
+          <h3 class="info-block__title">Teléfono</h3>
+          <p class="info-block__text"><a href={site.phoneHref} class="hover-link">{site.phone}</a></p>
+        </div>
+
+        <div class="info-block schedule-block">
+          <div class="schedule-head">
+            <h3 class="info-block__title">Horario</h3>
+            <span id="schedule-status" class="schedule-status">Cargando...</span>
+          </div>
+          
+          <table class="schedule-table">
+            <caption class="sr-only">Horarios de apertura del gimnasio</caption>
+            <tbody>
+              <tr data-days="1,2,3,4,5">
+                <th scope="row">Lun – Vie</th>
+                <td>4:30 a.m. – 10:30 p.m.</td>
+              </tr>
+              <tr data-days="6">
+                <th scope="row">Sábado</th>
+                <td>7:00 a.m. – 3:00 p.m.</td>
+              </tr>
+              <tr data-days="0">
+                <th scope="row">Domingo</th>
+                <td>9:00 a.m. – 1:00 p.m.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="contact__cta">
+          <a href={waUrl} target="_blank" rel="noopener" class="btn-wa">
+            <Fragment set:html={waIcon} />
+            <span>Escríbenos por WhatsApp</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha: Mapa Facade -->
+      <div class="contact__map">
+        <div class="map-facade" id="map-facade">
+          <div class="map-facade__inner">
+            <div class="map-facade__icon" set:html={mapIcon}></div>
+            <p class="map-facade__address">{site.address}</p>
+            <div class="map-facade__actions">
+              <button id="btn-load-map" class="btn-map btn-map--primary">Ver mapa interactivo</button>
+              <a href={site.mapsUrl} target="_blank" rel="noopener" class="btn-map btn-map--ghost">Cómo llegar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<style>
+  .contact {
+    padding-block: var(--sp-24);
+    background-color: var(--bg);
+  }
+
+  .contact__header {
+    margin-bottom: var(--sp-12);
+  }
+
+  .contact__title {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    color: var(--text);
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .overline {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-xs);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    border-left: 2px solid var(--red);
+    padding-left: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+
+  .contact__grid {
+    display: grid;
+    gap: var(--sp-12);
+  }
+
+  @media (min-width: 992px) {
+    .contact__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-16);
+    }
+  }
+
+  /* Info Blocks */
+  .contact__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-8);
+  }
+
+  .info-block__title {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 var(--sp-2) 0;
+  }
+
+  .info-block__text {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0;
+    max-width: 400px;
+  }
+
+  .hover-link {
+    transition: color var(--dur) var(--ease);
+  }
+  .hover-link:hover, .hover-link:focus-visible {
+    color: var(--red);
+  }
+
+  /* Schedule Table */
+  .schedule-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--sp-4);
+  }
+
+  .schedule-head .info-block__title {
+    margin: 0;
+  }
+
+  .schedule-status {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background-color: var(--surface);
+    color: var(--muted);
+  }
+  
+  .schedule-status.is-open {
+    background-color: rgba(209, 18, 27, 0.1);
+    color: var(--red);
+  }
+  .schedule-status.is-closed {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+  }
+
+  .schedule-table {
+    width: 100%;
+    max-width: 450px;
+    border-collapse: collapse;
+    font-size: var(--fs-base);
+  }
+
+  .schedule-table tr {
+    border-bottom: 1px dotted var(--line);
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .schedule-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding-block: var(--sp-3);
+    text-align: left;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .schedule-table td {
+    text-align: right;
+  }
+
+  /* Active day styling */
+  .schedule-table tr.is-today th,
+  .schedule-table tr.is-today td {
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  /* WhatsApp CTA */
+  .contact__cta {
+    margin-top: var(--sp-4);
+  }
+
+  .btn-wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-3);
+    width: 100%;
+    max-width: 450px;
+    min-height: 56px;
+    background-color: var(--red);
+    color: var(--text);
+    font-weight: 500;
+    font-size: var(--fs-base);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+
+  .btn-wa:hover, .btn-wa:focus-visible {
+    background-color: #b80f17;
+    transform: translateY(-2px);
+  }
+
+  .btn-wa:active {
+    transform: translateY(0);
+  }
+
+  /* Map Facade */
+  .contact__map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .map-facade {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-6);
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%);
+    text-align: center;
+    z-index: 2;
+  }
+
+  .map-facade__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-6);
+    max-width: 320px;
+  }
+
+  .map-facade__icon {
+    color: var(--red);
+  }
+
+  .map-facade__address {
+    font-size: var(--fs-base);
+    color: var(--text);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .map-facade__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    width: 100%;
+  }
+
+  .btn-map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .btn-map--primary {
+    background-color: var(--line);
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+  .btn-map--primary:hover {
+    background-color: #38383e;
+    border-color: #38383e;
+  }
+
+  .btn-map--ghost {
+    background-color: transparent;
+    border: 1px solid var(--muted);
+    color: var(--text);
+  }
+  .btn-map--ghost:hover {
+    border-color: var(--text);
+  }
+
+  /* Iframe injected by JS */
+  .contact__map :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 1;
+  }
+
+
+</style>
+
+<script>
+  // 1. Schedule Logic (Client-side localized to Mexico City)
+  const scheduleBlock = document.querySelector('.schedule-block');
+  
+  if (scheduleBlock) {
+    const statusEl = document.getElementById('schedule-status');
+    const rows = scheduleBlock.querySelectorAll('tr[data-days]');
+    
+    // Get current time in Mexico City
+    const now = new Date();
+    const mxTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+    
+    const day = mxTime.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const hours = mxTime.getHours();
+    const minutes = mxTime.getMinutes();
+    const timeNum = hours + (minutes / 60);
+
+    // Highlight current day row
+    let todayRow: HTMLTableRowElement | null = null;
+    rows.forEach(row => {
+      const days = row.getAttribute('data-days')?.split(',').map(Number) || [];
+      if (days.includes(day)) {
+        row.classList.add('is-today');
+        todayRow = row as HTMLTableRowElement;
+      }
+    });
+
+    // Determine Open/Closed status
+    let isOpen = false;
+    
+    // L-V: 04:30 (4.5) to 22:30 (22.5)
+    if (day >= 1 && day <= 5) {
+      if (timeNum >= 4.5 && timeNum < 22.5) isOpen = true;
+    }
+    // Sáb: 07:00 (7.0) to 15:00 (15.0)
+    else if (day === 6) {
+      if (timeNum >= 7 && timeNum < 15) isOpen = true;
+    }
+    // Dom: 09:00 (9.0) to 13:00 (13.0)
+    else if (day === 0) {
+      if (timeNum >= 9 && timeNum < 13) isOpen = true;
+    }
+
+    if (statusEl) {
+      statusEl.textContent = isOpen ? 'Abierto ahora' : 'Cerrado';
+      statusEl.className = `schedule-status ${isOpen ? 'is-open' : 'is-closed'}`;
+    }
+  }
+
+  // 2. Map Facade Logic
+  const btnLoadMap = document.getElementById('btn-load-map');
+  const facade = document.getElementById('map-facade');
+  
+  if (btnLoadMap && facade) {
+    btnLoadMap.addEventListener('click', () => {
+      const mapContainer = facade.parentElement;
+      if (mapContainer) {
+        facade.style.display = 'none';
+        const iframe = document.createElement('iframe');
+        // Generic maps embed URL for the address
+        iframe.src = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3757.291350697204!2d-99.2132334!3d19.6575515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d21f0003b1dbdb%3A0xc6c76e27e8a93a02!2sAv.%20de%20los%20Reyes%202%2C%20Centro%20Urbano%2C%2054700%20Cuautitl%C3%A1n%20Izcalli%2C%20M%C3%A9x.!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx';
+        iframe.title = 'Body Work Gym & Fitness Mapa';
+        iframe.loading = 'lazy';
+        mapContainer.appendChild(iframe);
+      }
+    });
+  }
+
+
+</script>

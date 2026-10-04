@@ -216,11 +216,13 @@ export async function initHeroScene(canvas, heroSection, scrollState) {
     if (isMobileNow) {
       targetOffsetX = 0;
       
-      // Starts at 0.15 (centered in intro gap), moves up slightly to 0.20 for later phases
-      targetOffsetY = 0.15 + Math.min(1, currentProgress * 10) * 0.05; 
+      // progress == 0 (Intro): 0.08 (centrado entre el título y las tarjetas abajo)
+      // progress > 0 (4 pasos): 0.25 (centrado en la mitad superior de la pantalla, arriba de "Cuautitlán...")
+      const phaseT = Math.min(1, currentProgress * 8);
+      targetOffsetY = 0.08 + phaseT * 0.17; 
       
-      // Intro size is 0.9x, grows to 1.05x in later phases for better presence
-      const mobileScaleMult = 0.90 + Math.min(1, currentProgress * 10) * 0.15;
+      // Escala: 0.9x en intro, 1.05x en los 4 pasos
+      const mobileScaleMult = 0.90 + phaseT * 0.15;
       targetScale = kf.scale * mobileScaleMult;
     }
     
